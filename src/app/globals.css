@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: applied when a `.dark` class is on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand: #2a14b4;
+  --color-brand-strong: #4338ca;
+  --color-brand-soft: #e3dfff;
+  --color-brand-fixed: #c3c0ff;
+  --color-accent: #10b981;
+  --color-accent-soft: #d1fae5;
+  --color-warning: #f59e0b;
+  --color-warning-soft: #fef3c7;
+  --color-ink: #14161f;
+  --color-ink-muted: #5a5f6e;
+  --color-surface: #f8f9fd;
+  --color-surface-dim: #f2f3f7;
+  --color-card: #ffffff;
+  --color-border: #e8e9f1;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Dark palette — redefines the semantic tokens so components adapt with no
+   per-element dark: variants. Brand is lightened for contrast on dark surfaces. */
+.dark {
+  --color-brand: #8b7bff;
+  --color-brand-strong: #a394ff;
+  --color-brand-soft: #241d47;
+  --color-brand-fixed: #4a3f8a;
+  --color-accent: #34d399;
+  --color-accent-soft: #0c2f25;
+  --color-warning: #fbbf24;
+  --color-warning-soft: #3a2e0a;
+  --color-ink: #f4f5fb;
+  --color-ink-muted: #a3a8bd;
+  --color-surface: #0c0e15;
+  --color-surface-dim: #191c28;
+  --color-card: #14161f;
+  --color-border: #262a39;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+}
