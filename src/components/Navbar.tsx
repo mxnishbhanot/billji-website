@@ -25,7 +25,6 @@ export default function Navbar() {
             alt="BillJi logo"
             width={36}
             height={36}
-            className="rounded-lg"
             priority
           />
           <span className="text-xl font-extrabold tracking-tight text-ink">
@@ -57,7 +56,7 @@ export default function Navbar() {
           )}
           <a
             href={CTA_HREF}
-            className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-strong"
+            className="btn-cta rounded-full px-5 py-2.5 text-sm font-semibold shadow-lg shadow-brand/25 transition"
           >
             Get BillJi Free
           </a>
@@ -68,6 +67,8 @@ export default function Navbar() {
         <button
           type="button"
           aria-label="Toggle menu"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
           className="flex h-10 w-10 items-center justify-center rounded-lg text-ink"
           onClick={() => setOpen((v) => !v)}
         >
@@ -90,7 +91,7 @@ export default function Navbar() {
       </nav>
 
       {open && (
-        <div className="border-t border-border bg-card px-4 pb-4 pt-2 md:hidden">
+        <div id="mobile-menu" className="border-t border-border bg-card px-4 pb-4 pt-2 md:hidden">
           {links.map((l) => (
             <a
               key={l.href}
@@ -104,7 +105,7 @@ export default function Navbar() {
           <a
             href={CTA_HREF}
             onClick={() => setOpen(false)}
-            className="mt-2 block rounded-full bg-brand px-5 py-2.5 text-center text-sm font-semibold text-white"
+            className="btn-cta mt-2 block rounded-full px-5 py-2.5 text-center text-sm font-semibold"
           >
             Get BillJi Free
           </a>

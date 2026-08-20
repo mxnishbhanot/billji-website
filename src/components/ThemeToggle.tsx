@@ -1,22 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+/**
+ * The theme lives on `<html class="dark">`, written by the inline script in
+ * layout.tsx before paint and by the toggle below. That class is an external
+ * store, so the button reads it with `useSyncExternalStore` rather than copying
+ * it into state inside an effect — no cascading render, and no hydration
+ * mismatch (the server snapshot is always "light", matching the pre-script HTML).
+ */
+const subscribe = (onChange: () => void) => {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  return () => observer.disconnect();
+};
+
+const isDark = () => document.documentElement.classList.contains("dark");
 
 export default function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
+  const dark = useSyncExternalStore(subscribe, isDark, () => false);
 
   const toggle = () => {
-    const root = document.documentElement;
-    const next = !root.classList.contains("dark");
-    root.classList.toggle("dark", next);
+    const next = !isDark();
+    document.documentElement.classList.toggle("dark", next);
     try {
       localStorage.setItem("theme", next ? "dark" : "light");
     } catch {}
-    setDark(next);
   };
 
   return (

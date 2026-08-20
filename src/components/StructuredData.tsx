@@ -68,10 +68,10 @@ const graph = {
       "@id": `${SITE_URL}/#app`,
       name: "BillJi",
       applicationCategory: "BusinessApplication",
-      operatingSystem: "Android, iOS, Web",
+      operatingSystem: "Android, iOS",
       url: SITE_URL,
       description:
-        "Create GST-compliant invoices in seconds, share on WhatsApp, track payments, manage inventory and file GST returns — all from your phone.",
+        "Create GST-compliant invoices, quotations, challans and credit notes in seconds. Share on WhatsApp, track payments and stock, and export GSTR-1 and GSTR-3B — offline-first, from your phone.",
       publisher: { "@id": `${SITE_URL}/#organization` },
       offers,
     },

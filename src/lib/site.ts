@@ -28,5 +28,19 @@ export const CTA_HREF = SIGNUP_URL || APP_URL || "#pricing";
 /** Destination for "Sign in". Empty string means "not configured — hide it". */
 export const SIGN_IN_HREF = APP_URL;
 
+/**
+ * Cookieless analytics (Plausible / Umami shape).
+ *
+ * Both read a `data-domain` attribute and set no cookies and no cross-site
+ * identifier, which is why this needs no consent banner. Unset means no script
+ * is rendered at all — there is no tracking by default.
+ *
+ * ANALYTICS_SRC must stay same-origin or be added to the CSP `script-src` in
+ * next.config.ts; the config derives the origin from this value.
+ */
+export const ANALYTICS_DOMAIN = process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN ?? "";
+export const ANALYTICS_SRC = process.env.NEXT_PUBLIC_ANALYTICS_SRC ?? "";
+export const ANALYTICS_ENABLED = Boolean(ANALYTICS_DOMAIN && ANALYTICS_SRC);
+
 export const SALES_EMAIL = "sales@billji.app";
 export const SUPPORT_EMAIL = "support@billji.app";

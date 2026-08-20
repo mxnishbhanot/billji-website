@@ -4,44 +4,78 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand: #2a14b4;
-  --color-brand-strong: #4338ca;
-  --color-brand-soft: #e3dfff;
-  --color-brand-fixed: #c3c0ff;
-  --color-accent: #10b981;
-  --color-accent-soft: #d1fae5;
-  --color-warning: #f59e0b;
-  --color-warning-soft: #fef3c7;
-  --color-ink: #14161f;
-  --color-ink-muted: #5a5f6e;
-  --color-surface: #f8f9fd;
-  --color-surface-dim: #f2f3f7;
+  /* Warm Ledger — verbatim from mobile/src/design-system/colors.ts
+     (warmLedgerLight). The app is the source of truth for brand colour; this
+     block only renames the app's tokens to the site's semantic ones. */
+  --color-brand: #d95f18;
+  --color-brand-strong: #9b4000;
+  --color-brand-soft: #ffe8da;
+  --color-accent: #2e9e6b;
+  --color-accent-soft: #d8f3e6;
+  --color-warning: #e0a02a;
+  --color-warning-soft: #fff1d6;
+  --color-ink: #1f1b18;
+  --color-ink-muted: #6b5449;
+  --color-surface: #fff8f5;
+  --color-surface-dim: #fcf2ec;
   --color-card: #ffffff;
-  --color-border: #e8e9f1;
+  --color-border: #efe1d8;
+  /* The app's CTA gradient is identical in light and dark, so these two are
+     deliberately NOT redefined in the .dark block below. */
+  --color-cta-start: #f97b3d;
+  --color-cta-end: #e4661f;
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Dark palette — redefines the semantic tokens so components adapt with no
    per-element dark: variants. Brand is lightened for contrast on dark surfaces. */
 .dark {
-  --color-brand: #8b7bff;
-  --color-brand-strong: #a394ff;
-  --color-brand-soft: #241d47;
-  --color-brand-fixed: #4a3f8a;
-  --color-accent: #34d399;
-  --color-accent-soft: #0c2f25;
+  /* warmLedgerDark, same mapping. `brand` is a light peach here, which is why
+     white-on-brand is never used — primary buttons take .btn-cta instead. */
+  --color-brand: #ffb692;
+  --color-brand-strong: #ffdbcb;
+  --color-brand-soft: #5c2a0a;
+  --color-accent: #4ecb8c;
+  --color-accent-soft: #0f3d2a;
   --color-warning: #fbbf24;
-  --color-warning-soft: #3a2e0a;
-  --color-ink: #f4f5fb;
-  --color-ink-muted: #a3a8bd;
-  --color-surface: #0c0e15;
-  --color-surface-dim: #191c28;
-  --color-card: #14161f;
-  --color-border: #262a39;
+  --color-warning-soft: #5c3a06;
+  --color-ink: #f9efe9;
+  --color-ink-muted: #c4b0a4;
+  --color-surface: #14100e;
+  --color-surface-dim: #1e1815;
+  --color-card: #26201c;
+  --color-border: #3a322c;
+}
+
+/* Every interactive element gets the same visible keyboard ring. Mouse users
+   never see it; keyboard users can always tell where they are. */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Honour the OS "reduce motion" setting: kill the smooth scroll, the hover
+   lifts and the theme cross-fade rather than making people motion-sick. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  /* The swipeable card rows are horizontal scrollers; this keeps a sub-pixel
+     overflow in one of them from ever scrolling the whole page sideways. */
+  overflow-x: hidden;
 }
 
 body {
@@ -50,6 +84,22 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* The one brand surface that must not flip with the theme: white text has to
+   stay readable on it, and `bg-brand` in dark mode is a light peach. Same
+   gradient as the app's primary buttons, in both themes. */
+.btn-cta {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-cta-start),
+    var(--color-cta-end)
+  );
+  color: #ffffff;
+}
+
+.btn-cta:hover {
+  filter: brightness(1.07);
 }
 
 ::selection {

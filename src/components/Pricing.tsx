@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { plans } from "@/lib/plans";
+import { SWIPE_ITEM, SwipeGrid, SwipeHint } from "./SwipeGrid";
 import { CTA_HREF, SALES_EMAIL } from "@/lib/site";
 
 function formatINR(n: number) {
@@ -12,7 +13,7 @@ export default function Pricing() {
   const [yearly, setYearly] = useState(true);
 
   return (
-    <section id="pricing" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+    <section id="pricing" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-xs font-bold uppercase tracking-widest text-brand">Pricing</p>
         <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -47,24 +48,28 @@ export default function Pricing() {
         </div>
       </div>
 
-      <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <SwipeGrid
+        label="BillJi plans"
+        cols="md:grid-cols-2 xl:grid-cols-4"
+        className="mt-12 md:gap-6"
+      >
         {plans.map((p) => (
           <div
             key={p.key}
-            className={`relative flex flex-col rounded-2xl p-7 ${
+            className={`${SWIPE_ITEM} relative flex flex-col rounded-2xl p-6 sm:p-7 ${
               p.highlight
                 ? "border-2 border-brand bg-card shadow-xl shadow-brand/15"
                 : "border border-border bg-card shadow-sm"
             }`}
           >
             {p.highlight && (
-              <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-brand px-4 py-1 text-xs font-bold text-white">
+              <span className="btn-cta absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-xs font-bold">
                 Most popular
               </span>
             )}
 
             <p className="text-sm font-bold text-ink-muted">
-              {p.emoji} {p.name}
+              <span aria-hidden="true">{p.emoji}</span> {p.name}
             </p>
             <p className="mt-1 text-xs text-ink-muted">{p.tagline}</p>
 
@@ -97,7 +102,7 @@ export default function Pricing() {
               href={p.custom ? `mailto:${SALES_EMAIL}` : CTA_HREF}
               className={`mt-6 rounded-full py-3 text-center text-sm font-bold transition ${
                 p.highlight
-                  ? "bg-brand text-white shadow-lg shadow-brand/25 hover:bg-brand-strong"
+                  ? "btn-cta shadow-lg shadow-brand/25"
                   : "border border-brand/25 text-brand hover:bg-brand-soft"
               }`}
             >
@@ -130,10 +135,13 @@ export default function Pricing() {
             )}
           </div>
         ))}
-      </div>
+      </SwipeGrid>
+      <SwipeHint label="Swipe to compare plans" />
 
       <p className="mt-8 text-center text-sm text-ink-muted">
-        All prices include GST. Cancel anytime — your data stays exportable on every plan.
+        All prices include GST. Pro and Business include a 14-day free trial and
+        a 7-day grace period on renewal. Cancel anytime — you drop back to
+        Starter and your documents stay readable.
       </p>
     </section>
   );
