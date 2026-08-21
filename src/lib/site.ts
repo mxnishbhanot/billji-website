@@ -29,6 +29,14 @@ export const CTA_HREF = SIGNUP_URL || APP_URL || "#pricing";
 export const SIGN_IN_HREF = APP_URL;
 
 /**
+ * Google Play listing. Empty until the app is published — the Play badge is
+ * not rendered at all rather than linking to a store page that 404s.
+ *
+ * There is deliberately no App Store equivalent: iOS is not built yet.
+ */
+export const PLAY_STORE_URL = process.env.NEXT_PUBLIC_PLAY_STORE_URL ?? "";
+
+/**
  * Cookieless analytics (Plausible / Umami shape).
  *
  * Both read a `data-domain` attribute and set no cookies and no cross-site

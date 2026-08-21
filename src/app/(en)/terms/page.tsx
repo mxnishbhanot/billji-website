@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Clause, LegalShell } from "@/components/LegalShell";
 import { Footer } from "@/components/CTAFooter";
 import { LEGAL_READY, legal } from "@/lib/legal";
-import { plans } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Terms of Service — BillJi",
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/terms" },
   robots: LEGAL_READY ? { index: true, follow: true } : { index: false, follow: false },
 };
-
-const starter = plans.find((p) => p.key === "starter");
 
 export default function Terms() {
   return (
@@ -46,8 +43,7 @@ export default function Terms() {
 
         <Clause heading="3. Plans, billing and trials">
           <p>
-            The Starter plan is free and includes{" "}
-            {starter ? "200 documents a month" : "a monthly document allowance"}.
+            The Starter plan is free and includes 200 documents a month.
             Paid plans are billed in advance, monthly or annually, in Indian
             rupees. Listed prices include GST.
           </p>

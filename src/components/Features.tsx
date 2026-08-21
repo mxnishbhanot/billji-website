@@ -1,119 +1,90 @@
 import { SWIPE_ITEM, SwipeGrid, SwipeHint } from "./SwipeGrid";
+import type { Content } from "@/lib/content";
 
-const features = [
-  {
-    icon: "🧾",
-    title: "Every sales document, one flow",
-    desc: "Tax invoices, quotations, delivery challans and credit notes from the same builder. Quotes and challans convert to an invoice in a tap; credit notes are raised against the original bill with per-line return quantities.",
-  },
-  {
-    icon: "🇮🇳",
-    title: "GST that works itself out",
-    desc: "CGST + SGST for intra-state, IGST for inter-state, decided from your customer's GSTIN and place of supply. Per-line tax rates, HSN codes, cess and reverse charge — with your own numbering series per document type.",
-  },
-  {
-    icon: "💬",
-    title: "Share on WhatsApp in one tap",
-    desc: "BillJi renders the PDF from the same template you see on screen and hands it to WhatsApp, email or your share sheet — plus a public link your customer can open without installing anything.",
-  },
-  {
-    icon: "💰",
-    title: "Payments, dues & customer credit",
-    desc: "Record full or partial payments in cash, UPI, bank transfer, card, cheque or wallet. Outstanding balance stays live per customer, and an overpayment becomes credit that is used oldest-first on their next bill.",
-  },
-  {
-    icon: "📣",
-    title: "Reminders that actually get sent",
-    desc: "One screen lists everyone due or overdue. Pick the customers, and BillJi opens a pre-filled WhatsApp chat for each in turn — with your own reminder wording if you want it.",
-  },
-  {
-    icon: "📦",
-    title: "Stock that keeps up with the counter",
-    desc: "Every invoice, challan, credit note and purchase moves stock automatically, with a full movement history per product. Scan a barcode straight onto a bill, and get low-stock and negative-stock alerts.",
-  },
-  {
-    icon: "📋",
-    title: "Orders before invoices",
-    desc: "Plan a sale as an order, track it through confirmed, fulfilled or cancelled with its own payment and delivery status, then invoice it when the goods actually go out.",
-  },
-  {
-    icon: "🏷️",
-    title: "Money going out, too",
-    desc: "Log expenses by category, record purchase bills against vendors, and pay them down. Cost of goods, gross profit and expenses land in the profit & loss view without a spreadsheet.",
-  },
-  {
-    icon: "📊",
-    title: "Reports that answer questions",
-    desc: "How much did I sell? How much did I collect? Am I making money? Who owes me money? What's performing well? Each is its own card, with a sales trend, collections by payment method and top products and customers.",
-  },
-  {
-    icon: "🗂️",
-    title: "GSTR-1 & GSTR-3B, ready to file",
-    desc: "Pick a month and BillJi builds GSTR-1 with its B2B, B2CL, B2CS and HSN sections plus a GSTR-3B outward-supplies summary. Download each as a CSV and send it straight to your CA.",
-  },
-  {
-    icon: "📱",
-    title: "Offline-first, not offline-ish",
-    desc: "Your data lives in an encrypted database on the phone, so you can bill and take payment with no signal at all. Invoice numbers are reserved per device so they never collide, and everything syncs — with conflict resolution — when you reconnect.",
-  },
-  {
-    icon: "👥",
-    title: "Teams, roles & audit logs",
-    desc: "Five built-in roles from owner to viewer, or custom roles you assemble permission by permission. Invite your accountant and staff, and see exactly who did what in the activity log.",
-  },
-  {
-    icon: "🔒",
-    title: "Security built in",
-    desc: "Two-factor authentication, trusted devices, session control and permission checks on every action. Your local copy is encrypted on the device, and backups run automatically.",
-  },
-  {
-    icon: "🏢",
-    title: "Multi-business ready",
-    desc: "Run more than one firm on the Business plan — switch between them in a tap, each with its own team, catalog, numbering, books and GST identity.",
-  },
-  {
-    icon: "🎨",
-    title: "Your invoice, your branding",
-    desc: "Add your logo, pick the accent colour, toggle the signature line, notes and payment rows, and preview the exact A4 page BillJi will print — with the \"Powered by BillJi\" footer removed on Pro and above.",
-  },
-];
+type Feature = Content["features"]["items"][number];
 
-export default function Features() {
+/**
+ * Which features lead the section, by index into `content.features.items`.
+ *
+ * Kept here rather than as a flag in the dictionaries: which six to show is a
+ * layout decision, identical in every language, and duplicating it per locale
+ * would let the two drift apart. Every locale lists the features in the same
+ * order, which is what makes indices safe.
+ */
+const TOP = [0, 1, 2, 3, 5, 9];
+
+function FeatureCard({
+  f,
+  className = "",
+}: {
+  f: Feature;
+  /** `SWIPE_ITEM` inside the swipe row; empty inside the plain <details> grid,
+      where its `sm:w-[calc(50%-0.75rem)]` would halve an already-half column. */
+  className?: string;
+}) {
+  return (
+    <div
+      className={`${className} reveal rounded-2xl border border-border bg-card p-5 shadow-sm transition sm:p-6 md:hover:-translate-y-1 md:hover:shadow-lg md:hover:shadow-brand/10`}
+    >
+      <div
+        aria-hidden="true"
+        className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-2xl sm:h-12 sm:w-12"
+      >
+        {f.icon}
+      </div>
+      <h3 className="mt-4 text-lg font-bold">{f.title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-ink-muted">{f.desc}</p>
+    </div>
+  );
+}
+
+export default function Features({ c }: { c: Content["features"] }) {
+  const top = TOP.map((i) => c.items[i]);
+  const rest = c.items.filter((_, i) => !TOP.includes(i));
+
   return (
     <section id="features" className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-bold uppercase tracking-widest text-brand">Features</p>
-        <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-          Everything a growing business needs to bill, collect &amp; comply
-        </h2>
-        <p className="mt-4 text-lg text-ink-muted">
-          From your first quotation to your GST return — BillJi covers the whole
-          journey without the complexity of desktop accounting software.
+      <div className="reveal mx-auto max-w-2xl text-center">
+        <p className="text-xs font-bold uppercase tracking-widest text-brand">
+          {c.eyebrow}
         </p>
+        <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
+          {c.heading}
+        </h2>
+        <p className="mt-4 text-lg text-ink-muted">{c.subhead}</p>
       </div>
 
+      {/* Six cards, not fifteen: the full list pushed Pricing three screens down
+          and nobody read the bottom half of it. The rest stay one tap away in a
+          native <details> — no JS, and still in the HTML for search engines. */}
       <SwipeGrid
-        label="BillJi features"
+        label={c.gridLabel}
         cols="md:grid-cols-2 lg:grid-cols-3"
         className="mt-12 md:mt-14 md:gap-6"
       >
-        {features.map((f) => (
-          <div
-            key={f.title}
-            className={`${SWIPE_ITEM} rounded-2xl border border-border bg-card p-5 shadow-sm transition sm:p-6 md:hover:-translate-y-1 md:hover:shadow-lg md:hover:shadow-brand/10`}
-          >
-            <div
-              aria-hidden="true"
-              className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-2xl sm:h-12 sm:w-12"
-            >
-              {f.icon}
-            </div>
-            <h3 className="mt-4 text-lg font-bold">{f.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink-muted">{f.desc}</p>
-          </div>
+        {top.map((f) => (
+          <FeatureCard key={f.title} f={f} className={SWIPE_ITEM} />
         ))}
       </SwipeGrid>
-      <SwipeHint label="Swipe through all 15 features" />
+      <SwipeHint label={c.swipeHint} />
+
+      <details className="group mt-8 md:mt-10">
+        <summary className="mx-auto flex w-fit cursor-pointer list-none items-center gap-2 rounded-full border border-brand/25 px-6 py-3 text-sm font-bold text-brand transition hover:bg-brand-soft [&::-webkit-details-marker]:hidden">
+          <span className="group-open:hidden">
+            {c.showAll.replace("{count}", String(c.items.length))}
+          </span>
+          <span className="hidden group-open:inline">{c.showFewer}</span>
+          <span aria-hidden="true" className="transition group-open:rotate-45">
+            +
+          </span>
+        </summary>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-6">
+          {rest.map((f) => (
+            <FeatureCard key={f.title} f={f} />
+          ))}
+        </div>
+      </details>
     </section>
   );
 }

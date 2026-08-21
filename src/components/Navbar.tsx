@@ -4,22 +4,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { CTA_HREF, SIGN_IN_HREF } from "@/lib/site";
+import { localeHref, type Content, type Locale } from "@/lib/content";
 
-const links = [
-  { href: "#features", label: "Features" },
-  { href: "#showcase", label: "The App" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
-];
-
-export default function Navbar() {
+export default function Navbar({
+  c,
+  locale,
+}: {
+  c: Content;
+  locale: Locale;
+}) {
   const [open, setOpen] = useState(false);
+
+  // In-page anchors, so they need no locale prefix — the section they point at
+  // is on whichever localised page is already being rendered.
+  const links = [
+    { href: "#features", label: c.nav.features },
+    { href: "#showcase", label: c.nav.showcase },
+    { href: "#pricing", label: c.nav.pricing },
+    { href: "#faq", label: c.nav.faq },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href={localeHref(locale)} className="flex items-center gap-2">
           <Image
             src="/icon.png"
             alt="BillJi logo"
@@ -45,48 +55,50 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <ThemeToggle />
+          <LanguageSwitcher locale={locale} />
+          <ThemeToggle label={c.a11y.toggleTheme} />
           {SIGN_IN_HREF && (
             <a
               href={SIGN_IN_HREF}
               className="rounded-full px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand-soft"
             >
-              Sign in
+              {c.nav.signIn}
             </a>
           )}
           <a
             href={CTA_HREF}
             className="btn-cta rounded-full px-5 py-2.5 text-sm font-semibold shadow-lg shadow-brand/25 transition"
           >
-            Get BillJi Free
+            {c.nav.cta}
           </a>
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
-        <ThemeToggle />
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-ink"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            {open ? (
-              <>
-                <line x1="5" y1="5" x2="19" y2="19" />
-                <line x1="19" y1="5" x2="5" y2="19" />
-              </>
-            ) : (
-              <>
-                <line x1="4" y1="7" x2="20" y2="7" />
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="17" x2="20" y2="17" />
-              </>
-            )}
-          </svg>
-        </button>
+          <LanguageSwitcher locale={locale} />
+          <ThemeToggle label={c.a11y.toggleTheme} />
+          <button
+            type="button"
+            aria-label={c.a11y.toggleMenu}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-ink"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {open ? (
+                <>
+                  <line x1="5" y1="5" x2="19" y2="19" />
+                  <line x1="19" y1="5" x2="5" y2="19" />
+                </>
+              ) : (
+                <>
+                  <line x1="4" y1="7" x2="20" y2="7" />
+                  <line x1="4" y1="12" x2="20" y2="12" />
+                  <line x1="4" y1="17" x2="20" y2="17" />
+                </>
+              )}
+            </svg>
+          </button>
         </div>
       </nav>
 
@@ -107,7 +119,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="btn-cta mt-2 block rounded-full px-5 py-2.5 text-center text-sm font-semibold"
           >
-            Get BillJi Free
+            {c.nav.cta}
           </a>
         </div>
       )}

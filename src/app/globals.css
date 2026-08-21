@@ -106,3 +106,101 @@ body {
   background: var(--color-brand-soft);
   color: var(--color-brand);
 }
+
+/* Scroll-driven reveal for section content.
+
+   Progressive enhancement, deliberately: elements are fully visible by
+   default and only animate where `animation-timeline` is supported (Chrome,
+   Edge, Safari 26+). Firefox and older Safari render the finished state with
+   no JS fallback and no layout shift.
+
+   The `no-preference` guard is not redundant with the reduced-motion block
+   above: a scroll-driven animation has no duration for that block's
+   `animation-duration: 0.01ms` override to shorten. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 22%;
+    }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The two hero cards that float beside the phone.
+
+   Rotation lives in the keyframes, not in a Tailwind `rotate-*` class: the bob
+   animation writes `transform`, so a class-based rotation would be dropped the
+   moment the animation starts. Each card sets its own `--tilt`.
+
+   The reduced-motion block above collapses both animations to their finished
+   state, which is exactly right here — the cards stay put and stay visible. */
+.float-card {
+  animation:
+    float-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both,
+    float-bob 5s ease-in-out 1.2s infinite;
+}
+
+/* Second card, offset so the pair lands one after the other rather than in
+   lockstep. Both delays shift: the entrance and the bob it hands off to. */
+.float-card-late {
+  animation-delay: 0.35s, 1.55s;
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(var(--tilt, 0deg));
+  }
+}
+
+@keyframes float-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-7px) rotate(var(--tilt, 0deg));
+  }
+}
+
+/* Devanagari has no glyphs in Plus Jakarta Sans, so Hindi text would fall back
+   to whatever the OS picks per-glyph — usually fine, occasionally a serif that
+   clashes. `:lang(hi)` is the native hook: it matches `hi` and any `hi-*`
+   subtag, so the whole Hindi page and any single Hindi line inside an English
+   page both get the stack below with no class to remember.
+
+   A webfont is not worth it: every target OS already ships one of these
+   (Android/Linux Noto, Windows Nirmala UI, macOS Kohinoor). Load Noto Sans
+   Devanagari via next/font only if a design review asks for one exact face. */
+:lang(hi) {
+  font-family: "Noto Sans Devanagari", "Nirmala UI", "Kohinoor Devanagari",
+    "Mangal", var(--font-sans);
+}
+
+/* Devanagari sits visually smaller than Latin at the same px size, and its
+   matras need more room above and below the line.
+
+   Set on the body only, never on `:lang(hi)` itself: that selector matches
+   every element on a Hindi page, so a relative `font-size` there would compound
+   once per nesting level (1.05^depth) and blow the type scale apart. One bump
+   at the root inherits down exactly once. */
+body:lang(hi) {
+  font-size: 1.05rem;
+  line-height: 1.65;
+}

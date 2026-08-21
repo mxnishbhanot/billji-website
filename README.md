@@ -23,9 +23,10 @@ and feature claims are derived from the backend, not written from memory:
 
 - `src/lib/plans.ts` mirrors `PLAN_SEEDS` in `backend/src/constants/entitlements.js`.
   `legacy_pro` is intentionally absent; it is platform-assigned, not purchasable.
-- `src/lib/faqs.ts` and `src/components/Features.tsx` describe shipped modules
-  only. Referrals exist in the mobile app but have no backend routes yet, so
-  they are deliberately not advertised.
+- `src/lib/content/en.ts` holds every string on the page — features, FAQ, plan
+  bullets, alt text — and describes shipped modules only. Referrals exist in the
+  mobile app but have no backend routes yet, so they are deliberately not
+  advertised.
 - Colour tokens in `src/app/globals.css` are copied verbatim from the app's
   `mobile/src/design-system/colors.ts`. The app is the source of truth for
   brand; do not invent values here.
@@ -38,6 +39,40 @@ than editing the surrounding prose.
 In dark mode the brand colour is a light peach, so `bg-brand` with white text is
 unreadable. Primary buttons use the `.btn-cta` class instead, which applies the
 app's CTA gradient — identical in both themes.
+
+## Languages
+
+English lives at `/` and Hindi at `/hi`. English keeps the bare path on purpose:
+the canonical URLs, sitemap and existing rankings were all built against `/`, and
+moving it to `/en` would throw that away.
+
+- Every string is in `src/lib/content/<locale>.ts`. `Content` is derived from
+  `en.ts`, so a missing or misspelled key in another locale is a build error, not
+  a silent English fallback at runtime.
+- `en.ts` is the source of truth for the shape. Add a string there first, then in
+  every other locale.
+- What is *not* translated, deliberately: plan prices and flags
+  (`src/lib/plans.ts`), the legal pages (English-only while `LEGAL_READY` is
+  false), the fake business data inside the phone mockups (that is the app's own
+  UI, which is English), and the trust-strip figures and quotes
+  (`src/lib/trust.ts` — a customer said what they said, and a rating is a number).
+- GST vocabulary (GST, GSTIN, CGST, IGST, HSN, GSTR-1) and platform names
+  (WhatsApp, Google Play, PDF, CSV, UPI) stay in Latin script in every locale,
+  because that is how they appear on the portal and in the app.
+- `hi.ts` has **not** been reviewed by a native speaker. Every factual claim
+  matches `en.ts`, but get the phrasing read before advertising the locale.
+
+Each locale needs its own `<html lang>`, and only a root layout may render
+`<html>`, so each one is a route group with its own root layout —
+`src/app/(en)/layout.tsx` and `src/app/(hi)/hi/layout.tsx`. Both are three-line
+calls into `src/components/RootHtml.tsx`, and both pages are three-line calls
+into `src/components/HomePage.tsx`, so the markup exists exactly once. Navigating
+between locales is a full page load; that is inherent to multiple root layouts
+and fine for a language switch.
+
+To add a locale: add it to `LOCALES` in `src/lib/content/index.ts`, write its
+dictionary, add a route group with a root layout and a page. The `hreflang` set,
+the sitemap and the language switcher all read `LOCALES` and pick it up.
 
 ## Legal pages
 

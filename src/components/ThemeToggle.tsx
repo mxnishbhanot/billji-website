@@ -20,7 +20,7 @@ const subscribe = (onChange: () => void) => {
 
 const isDark = () => document.documentElement.classList.contains("dark");
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ label }: { label: string }) {
   const dark = useSyncExternalStore(subscribe, isDark, () => false);
 
   const toggle = () => {
@@ -35,7 +35,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label="Toggle dark mode"
+      aria-label={label}
       className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition hover:bg-surface-dim"
     >
       {dark ? (

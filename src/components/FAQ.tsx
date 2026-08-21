@@ -1,18 +1,20 @@
-import { faqs } from "@/lib/faqs";
+import type { Content } from "@/lib/content";
 
-export default function FAQ() {
+export default function FAQ({ c }: { c: Content["faq"] }) {
   return (
     <section id="faq" className="bg-card py-14 sm:py-20">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        <div className="text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-brand">FAQ</p>
+        <div className="reveal text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand">
+            {c.eyebrow}
+          </p>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Questions? Answered.
+            {c.heading}
           </h2>
         </div>
 
         <div className="mt-8 space-y-3 sm:mt-10">
-          {faqs.map((f) => (
+          {c.items.map((f) => (
             <details
               key={f.q}
               className="group rounded-2xl border border-border bg-surface p-4 open:bg-brand-soft/30 sm:p-5"
